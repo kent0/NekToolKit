@@ -8,7 +8,6 @@ function [dudx,dudy] = grad(u,rx,ry,sx,sy,jaci,d,mode)
 
 if nargin==6; mode=0; end
 
-
 [n1,n2,n3]=size(u);
 ur=zeros(n1,n2);
 us=zeros(n1,n2);
