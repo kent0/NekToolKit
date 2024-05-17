@@ -62,7 +62,7 @@ function rdict = afld_reader(fname)
     end
     
     % Initialize data array
-    nxyz=nx*ny
+    nxyz=nx*ny;
     if ndim == 3; nxyz = nxyz*nz; end
 
     data = zeros(nel*nxyz, nfld);
@@ -78,12 +78,7 @@ function rdict = afld_reader(fname)
     end
     
     % Read data
-%   for i = 1:(nel*nxyz)
-%       line = fgetl(file);
-%       % use fscanf instead of sscanf to read the entire file
-%       data(i,:) = sscanf(line,'%f');
-%   end
-    data = fscanf(file, '%f', [nel*nxyz, nfld]);
+    data = fscanf(file, '%f', [nfld,nxyz*nel])';
     
     % Close the file
     fclose(file);

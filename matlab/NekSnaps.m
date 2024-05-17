@@ -17,7 +17,7 @@ classdef NekSnaps < handle
     end
 
     methods
-        function obj = NekSnaps(cname, isnaps)
+        function obj = NekSnaps(cname, isnapsu)
             if nargin < 1
                 if exist('SESSION.NAME','file')
                     fileID = fopen('SESSION.NAME');
@@ -31,21 +31,22 @@ classdef NekSnaps < handle
                     return
                 end
             end
+
             ifbin=true;
-            if nargin < 2
-                isnaps = find_snaps(cname);
+            isnaps = find_snaps(cname);
+            if isempty(isnaps)
+                isnaps = find_snaps(cname,'ASCII');
                 if isempty(isnaps)
-                    isnaps = find_snaps(cname,'ASCII');
-                    if isempty(isnaps)
-                        disp('ERROR: No snapshots found, exiting...');
-                        return
-                    end
-                    ifbin = false;
+                    disp('ERROR: No snapshots found, exiting...');
+                    return
                 end
+                ifbin = false;
             end
+            if nargin >= 2; isnaps = isnapsu; end
+
             obj.cname = cname;
             obj.isnaps = isnaps;
-            if nargin > 2; obj.ifbin = ifbin; end
+            obj.ifbin = ifbin;
 
             if obj.verbose
                 if length(isnaps)>1
@@ -116,23 +117,15 @@ classdef NekSnaps < handle
 
             ixyz=index;
 
-            nx1 = size(x,1);
-            [zi, w] = zwgll(nx1-1);
-
             while isempty(x)
                 if isfield(obj.flds{ixyz},'x')
                     x=obj.flds{ixyz}.x;
                     y=obj.flds{ixyz}.y;
+                    nx1 = size(x,1);
+                    [zi, w] = zwgll(nx1-1);
 
-                    deriv_geo(x,y,zi);
+%                   [xr,yr,xs,ys,rx,ry,sx,sy,jac,jaci] = deriv_geo(x,y,zi);
 
-                    d = deriv_mat(x);
-
-                    xr = reshape(d*reshape(x,nx1,[]),nx1,nx1,[]);
-                    yr = reshape(d*reshape(y,nx1,[]),nx1,nx1,[]);
-
-                    xs = reshape(reshape(x,nx1,[]),nx1,nx1,[]);
-                    ys = reshape(reshape(y,nx1,[]),nx1,nx1,[]);
                 else
                     ixyz=ixyz-1;
                     if ixyz<1
