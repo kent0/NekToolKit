@@ -124,8 +124,8 @@ classdef NekSnaps < handle
                     nx1 = size(x,1);
                     [zi, w] = zwgll(nx1-1);
 
-%                   [xr,yr,xs,ys,rx,ry,sx,sy,jac,jaci] = deriv_geo(x,y,zi);
-
+                    d=deriv_mat(zi);
+                    [xr,yr,xs,ys,rx,ry,sx,sy,jac,jaci] = deriv_geo(x,y,d);
                 else
                     ixyz=ixyz-1;
                     if ixyz<1
@@ -149,12 +149,30 @@ classdef NekSnaps < handle
             ptitle='';
 
             if ischar(pfun)
-                if strcmp(pfun,'x')
+                lgrad=@(u,mode) grad(u,rx,ry,sx,sy,jaci,d,mode);
+                if strcmp(pfun,'x') || strcmp(pfun,'x1')
                     f = x;
-                elseif strcmp(pfun,'y')
+                elseif strcmp(pfun,'y') || strcmp(pfun,'x2')
                     f = y;
-                elseif strcmp(pfun,'umag')
+                elseif strcmp(pfun,'u1')
+                    f = obj.flds{index}.u;
+                elseif strcmp(pfun,'u2')
+                    f = obj.flds{index}.v;
+                elseif strcmp(pfun,'u_abs')
                     f = sqrt(obj.flds{index}.u.^2 + obj.flds{index}.v.^2);
+                elseif strcmp(pfun,'u_div')
+                    ux=lgrad(obj.flds{index}.u,1);
+                    vy=lgrad(obj.flds{index}.v,2);
+                    f = ux+vy;
+                elseif strcmp(pfun,'u_curl')
+                    uy=lgrad(obj.flds{index}.u,2);
+                    vx=lgrad(obj.flds{index}.v,1);
+                    f = vx-uy;
+                elseif strcmp(pfun,'p_lap')
+                    [px,py]=lgrad(obj.flds{index}.p,0);
+                    pxx=lgrad(px,1);
+                    pyy=lgrad(py,2);
+                    f = pxx+pyy;
                 else
                     f = obj.flds{index}.(pfun);
                 end

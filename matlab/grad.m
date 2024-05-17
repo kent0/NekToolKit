@@ -1,32 +1,43 @@
 function [dudx,dudy] = grad(u,rx,ry,sx,sy,jaci,d,mode)
 
-if nargin==6
-    mode=0;
-end
+% computes derivative of u with respect to x and y
 
-dudx=[];
-dudy=[];
+% mode 0: compute both dudx and dudy (default), 
+% mode 1: compute only dudx,
+% mode 2: compute only dudy.
+
+if nargin==6; mode=0; end
+
 
 [n1,n2,n3]=size(u);
 ur=zeros(n1,n2);
 us=zeros(n1,n2);
 dt=d';
 
-if mode < 2;
-    dudx=zeros(size(u));
-end
-
-if mode ~= 1;
-    dudy=zeros(size(u));
-end
-
-
+dudx=zeros(size(u));
+dudy=[]; if mode == 0; dudy=zeros(size(u)); end
 
 if mode == 0
     for ie=1:size(u,3)
         ur=d*u(:,:,ie);
         us=u(:,:,ie)*dt;
-        dudx(:,:,ie)=jaci(i,1)*rx(i)+jaci(i,2)*sx(i);
-        dudy(:,:,ie)=jaci(i,1)*ry(i)+jaci(i,2)*sy(i);
+        dudx(:,:,ie)=jaci(:,:,ie).*(ur.*rx(:,:,ie)+us.*sx(:,:,ie));
+        dudy(:,:,ie)=jaci(:,:,ie).*(ur.*ry(:,:,ie)+us.*sy(:,:,ie));
+    end
+end
+
+if mode == 1
+    for ie=1:size(u,3)
+        ur=d*u(:,:,ie);
+        us=u(:,:,ie)*dt;
+        dudx(:,:,ie)=jaci(:,:,ie).*(ur.*rx(:,:,ie)+us.*sx(:,:,ie));
+    end
+end
+
+if mode == 2
+    for ie=1:size(u,3)
+        ur=d*u(:,:,ie);
+        us=u(:,:,ie)*dt;
+        dudx(:,:,ie)=jaci(:,:,ie).*(ur.*ry(:,:,ie)+us.*sy(:,:,ie));
     end
 end

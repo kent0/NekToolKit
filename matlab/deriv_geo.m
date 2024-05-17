@@ -1,5 +1,4 @@
-function [xr,yr,xs,ys,rx,ry,sx,sy,jac,jaci] = deriv_geo(x,y,xref);
-d = deriv_mat(xref);
+function [xr,yr,xs,ys,rx,ry,sx,sy,jac,jaci,d] = deriv_geo(x,y,d);
 
 xr = t2d(d,x,[]);
 yr = t2d(d,y,[]);

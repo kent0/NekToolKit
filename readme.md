@@ -8,9 +8,9 @@ NekToolKit is (currently) a suite of Matlab functions enabling processing of Nek
 
 ## Workflow
 
-The project is motivated around fast TTFP (Time-to-first-plot) measured in GUI manipulation time and not compute-time.
+This project's original motivation was for a fast TTFP (Time-to-first-plot), measured in GUI manipulation time and not compute-time.
 
-First, `NekToolKit/matlab` should be added to path and then call NekSnaps to create snapshots object which allows easy plotting. An example shown below:
+First, `NekToolKit/matlab` should be added to path and then call `NekSnaps` to create snapshots object which allows easy plotting. An example shown below:
 
 ```
 addpath('~/NekToolKit/matlab'); % replace with /path/to/NekTookKit/matlab
@@ -19,10 +19,10 @@ addpath('~/NekToolKit/matlab'); % replace with /path/to/NekTookKit/matlab
 % second argument optional
 s = NekSnaps('casename',1:10);
 
-s.first('u') % plot the first component of velocity for the first snapshot
+s.first('u1') % plot the first component of velocity for the first snapshot
 
 % plot the velocity magnitude for the first 10 snapshots
-for i=1:10; s.show(i,'umag'); end
+for i=1:10; s.show(i,'u_abs'); end
 ```
 
 The initialization process can be scripted by adding the path in `setup.m` and adding conveninece script:
@@ -31,10 +31,23 @@ The initialization process can be scripted by adding the path in `setup.m` and a
 /Applications/MATLAB_R2023b.app/bin/matlab -nosplash -nodesktop -r 's=NekSnaps(); s.first()'
 ```
 
+### Supported fields
+
+- 'x1', 'x2': mesh position components
+- 'u1', 'u2': velocity components
+    - 'u\_abs': velocity magnitude
+    - 'u\_div': velocity divergence
+    - 'u\_div': vorticity
+- 'p': pressure
+    - 'p\_lap': pressure Laplacian
+- 't': temperature
+- 's1', 's2', ... : passive-scalars
+
 ## Future Plans
 
 ### On TODO
 
+- Frame rendering
 - Field dump
 - Support for opposite endianness 
 
@@ -43,12 +56,12 @@ The initialization process can be scripted by adding the path in `setup.m` and a
 - Pre-processing (.rea, .re2)
 - Slicing for `n2to3`-extruded mesh
 - Integration
-- Mesh Quality
-- Python Support
-- Julia Support
+- Mesh quality
+- Python support
+- Julia support
 
 ### Long-Shot
 
-- Direct-Stiffness (reading from .map / ma2)
+- Direct-stiffness (reading from .map / ma2)
 - Solves
 - GUI
