@@ -1,6 +1,7 @@
 # NekToolKit: a light-weight support suite for Nek5000
 
 Author: Kento Kaneko (kaneko@mit.edu)
+
 Date: 2024-05-17
 
 NekToolKit is (currently) a suite of Matlab functions enabling processing of Nek5000-related files. Development is in the early stage and no guarantee of backwards-compatability between commits (alpha). Any feedback / suggestions is welcomed!
