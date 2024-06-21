@@ -30,12 +30,12 @@ function patch_plot(x, y, z, filename, varargin)
         end
     end
 
-    zmin = min(z, [], 'all');
-    zmax = max(z, [], 'all');
-    xmin = min(x, [], 'all');
-    xmax = max(x, [], 'all');
-    ymin = min(y, [], 'all');
-    ymax = max(y, [], 'all');
+    zmin = min(z(:));
+    zmax = max(z(:));
+    xmin = min(x(:));
+    xmax = max(x(:));
+    ymin = min(y(:));
+    ymax = max(y(:));
 
     lx=xmax-xmin;
     ly=ymax-ymin;

@@ -142,8 +142,10 @@ classdef NekSnaps < handle
             else
                 zo = linspace(-1, 1, ceil(nx1*obj.Jfac));
                 J = interp_mat(zo, zi);
-                xJ = interp_2d(x, J);
-                yJ = interp_2d(y, J);
+%               xJ = interp_2d(x, J);
+%               yJ = interp_2d(y, J);
+                xJ = t2d(J,x,J');
+                yJ = t2d(J,y,J');
             end
 
             ptitle='';
@@ -187,7 +189,8 @@ classdef NekSnaps < handle
             if isempty(J)
                 fJ = f;
             else
-                fJ = interp_2d(f, J); % for now interpolate field from 'coarse' grid
+%               fJ = interp_2d(f, J); % for now interpolate field from 'coarse' grid
+                fJ = t2d(J, f, J'); % for now interpolate field from 'coarse' grid
             end
 
             ptitle = [ptitle,sprintf('istep = %g, time = %g', obj.flds{index}.istep, obj.flds{index}.time)];
@@ -196,11 +199,7 @@ classdef NekSnaps < handle
             ptitle = [ptitle, ', ', ff{1}];
 
             ax = gca;
-            cpos = ax.CameraPosition;
-            ctgt = ax.CameraTarget;
-            cvec = ax.CameraUpVector;
-
-            patch_plot(xJ, yJ, fJ, [], 'ColorMap', obj.colormap, 'Title', ptitle, 'EdgeColor', obj.ecolor, 'CameraPosition', cpos, 'CameraTarget', ctgt, 'CameraUpVector', cvec);
+            patch_plot(xJ, yJ, fJ, [], 'ColorMap', obj.colormap, 'Title', ptitle, 'EdgeColor', obj.ecolor);
             obj.index=index;
             obj.pfun=pfun;
         end

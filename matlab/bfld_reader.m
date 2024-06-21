@@ -2,7 +2,8 @@ function rdict = bfld_reader(filename);
     rdict=struct();
 
     fileID = fopen(filename);
-    header = split(char(fread(fileID,[1,132],'char')));
+%   header = split(char(fread(fileID,[1,132],'char')));
+    header = strsplit(char(fread(fileID,[1,132],'char')));
 
     std=header{1};
     wdsize=str2num(header{2});
