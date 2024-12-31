@@ -7,7 +7,7 @@ function patch_plot(x, y, z, filename, varargin)
     ecolor = 'k';
 
     cmap = 'jet';
-
+    plot_type='surface';
     cpos=[];
     ctgt=[];
     cvec=[];
@@ -27,6 +27,8 @@ function patch_plot(x, y, z, filename, varargin)
             ctgt = varargin{k+1};
         elseif strcmp(varargin{k}, 'CameraVector')
             cvec = varargin{k+1};
+        elseif strcmp(varargin{k}, 'PlotType')
+            plot_type= varargin{k+1};
         end
     end
 
@@ -50,13 +52,28 @@ function patch_plot(x, y, z, filename, varargin)
 
     a1=0;
     a2=0;
+    interval=5;
+    start=interval;
+    stop=100 - interval;
+    level_weights = [start:interval:stop]/100;
+    levels = (1-level_weights)*zmin + level_weights*zmax;
     for i = 1:size(z, 3)
-        surface(x(:,:,i), y(:,:,i), z(:,:,i),'FaceColor','interp','EdgeColor','none'); hold on
+        if strcmp(plot_type, 'surface')
+            surface(x(:,:,i), y(:,:,i), z(:,:,i),'FaceColor','interp','EdgeColor','none'); hold on
+        elseif strcmp(plot_type, 'contour')
+            contour(x(:,:,i), y(:,:,i), z(:,:,i),levels); hold on
+        else
+            error('Unrecognized plot type');
+        end;
     end
 
     colormap(cmap);
     cb=colorbar;
-    cb.TickLabelInterpreter = 'latex';
+    try
+        cb.TickLabelInterpreter = 'latex';
+    catch 
+        warning('colorbar is not an object in Octave');
+    end;
 
     if ~strcmp(ecolor, '')
         zconst = zeros(size(x,1),1)+zmax+(zmax-zmin)*0.01;

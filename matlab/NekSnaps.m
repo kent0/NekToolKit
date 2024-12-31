@@ -9,6 +9,7 @@ classdef NekSnaps < handle
         index=1;
         pfun='x';
         verbose=true;
+        plot_type='surface';
 
         % plot options
         colormap='jet';
@@ -199,7 +200,7 @@ classdef NekSnaps < handle
             ptitle = [ptitle, ', ', ff{1}];
 
             ax = gca;
-            patch_plot(xJ, yJ, fJ, [], 'ColorMap', obj.colormap, 'Title', ptitle, 'EdgeColor', obj.ecolor);
+            patch_plot(xJ, yJ, fJ, [], 'ColorMap', obj.colormap, 'Title', ptitle, 'EdgeColor', obj.ecolor,'PlotType',obj.plot_type);
             obj.index=index;
             obj.pfun=pfun;
         end
